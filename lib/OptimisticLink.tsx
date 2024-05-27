@@ -1,19 +1,17 @@
 import type { LinkProps } from 'next/link';
-import NextLink from 'next/link';
+import Link from 'next/dist/client/link'
 import type {
   AnchorHTMLAttributes,
   KeyboardEvent,
   MouseEvent,
 } from 'react';
-import React, { forwardRef, useContext } from 'react';
+import { forwardRef, useContext } from 'react';
 
 import { OptimisticLinkContext } from './OptimisticLinkProvider';
 import type { GetRouteInfoProps, ModifiedRouter } from './router-extensions/types';
 import PageRouter from 'next/router';
 
-type NextLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & LinkProps & {
-  children: React.ReactNode;
-}
+type NextLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & LinkProps
 
 export const OptimisticLink = forwardRef<HTMLAnchorElement, NextLinkProps>(function LinkComponent(props, forwardedRef) {
   const {
@@ -58,13 +56,13 @@ export const OptimisticLink = forwardRef<HTMLAnchorElement, NextLinkProps>(funct
   }
 
   return (
-    <NextLink
+    <Link
       onClick={handleClick}
       onKeyPress={handleKeyPress}
       ref={forwardedRef}
       {...restProps}
     >
       {children}
-    </NextLink>
+    </Link>
   )
 })
