@@ -1,5 +1,5 @@
 import { GetRouteInfoWithOnLoadProps, ModifiedRouter } from './types';
-import PageRouter from 'next/router';
+import PageRouter from 'next/dist/client/router';
 
 export const getRouteInfoWithOnLoad = async ({ onLoad, ...props}: GetRouteInfoWithOnLoadProps,
 ) => {

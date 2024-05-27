@@ -8,7 +8,7 @@ import {
 import { subModified } from './router-extensions/subModified';
 import { onlyAHashChangeNever } from './router-extensions/onlyAHashChangeNever';
 import { beforePopStateModified } from './router-extensions/beforePopStateModified';
-import PageRouter from 'next/router';
+import PageRouter from 'next/dist/client/router';
 
 interface Props {
   pathnameModifier: (pathname: string) => string

@@ -1,4 +1,4 @@
-import type { Router } from 'next/router';
+import type { Router } from 'next/dist/client/router';
 import type { AppComponent, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
 import type { ParsedUrlQuery } from 'querystring';
 

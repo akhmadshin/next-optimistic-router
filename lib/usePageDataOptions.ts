@@ -3,7 +3,7 @@ import { OptimisticLinkContext } from './OptimisticLinkProvider';
 import { resolveDynamicRoute } from './router-utils/resolve-dynamic-route';
 import { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './router-extensions/types';
 import { buildRoute } from './router-utils/build-route';
-import PageRouter, { useRouter } from 'next/router';
+import PageRouter, { useRouter } from 'next/dist/client/router';
 
 export const usePageDataOptions = <T>() => {
   const pathnameModifier = useContext(OptimisticLinkContext);

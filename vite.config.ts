@@ -18,7 +18,16 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['react', 'react/jsx-runtime', 'next/router', 'next/router', 'next/link', 'next/dist'],
+      external: [
+        'react',
+        'react/jsx-runtime',
+        'next/router',
+        'next/router',
+        'next/link',
+        'next/dist',
+        'next/dist/client/link',
+        'next/dist/client/router'
+      ],
       input: Object.fromEntries(
         // https://rollupjs.org/configuration-options/#input
         glob.sync('lib/**/*.{ts,tsx}').map(file => [

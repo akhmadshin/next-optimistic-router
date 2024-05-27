@@ -11,7 +11,7 @@
 import type { CompletePrivateRouteInfo, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
 import { GetRouteInfoWithPathnameModifierProps, ModifiedRouter } from './types';
 import { resolveDynamicRoute } from '../router-utils/resolve-dynamic-route';
-import PageRouter from 'next/router';
+import PageRouter from 'next/dist/client/router';
 
 
 export const getRouteInfoOnly = async (props: GetRouteInfoWithPathnameModifierProps): Promise<{

@@ -1,6 +1,6 @@
 import type { AppComponent, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
 import { ModifiedRouter } from './types';
-import PageRouter from 'next/router';
+import PageRouter from 'next/dist/client/router';
 
 export const subModified = (info: PrivateRouteInfo, App: AppComponent, scroll: { x: number; y: number } | null) => {
   const pageRouter = PageRouter.router as ModifiedRouter | null;

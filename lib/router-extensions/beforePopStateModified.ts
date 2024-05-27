@@ -1,5 +1,5 @@
 import { ModifiedRouter } from './types';
-import PageRouter from 'next/router';
+import PageRouter from 'next/dist/client/router';
 
 interface TransitionOptions {
   shallow?: boolean

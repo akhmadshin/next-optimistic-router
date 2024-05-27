@@ -9,7 +9,7 @@ import { forwardRef, useContext } from 'react';
 
 import { OptimisticLinkContext } from './OptimisticLinkProvider';
 import type { GetRouteInfoProps, ModifiedRouter } from './router-extensions/types';
-import PageRouter from 'next/router';
+import PageRouter from 'next/dist/client/router';
 
 type NextLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & LinkProps
 
