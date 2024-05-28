@@ -3,10 +3,10 @@ import { OptimisticLinkContext } from './OptimisticLinkProvider';
 import { resolveDynamicRoute } from './router-utils/resolve-dynamic-route';
 import { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './router-extensions/types';
 import { buildRoute } from './router-utils/build-route';
-import type { Router } from 'next/router';
+import type { NextRouter, SingletonRouter } from 'next/router';
 
-export const usePageDataOptions = <T>(router: Router) => {
-  const { pathnameModifier, singletonRouter } = useContext(OptimisticLinkContext);
+export const usePageDataOptions = <T>(router: NextRouter, singletonRouter?: SingletonRouter) => {
+  const { pathnameModifier } = useContext(OptimisticLinkContext);
 
   const queryFn = useCallback(async () => {
     const pageRouter = singletonRouter?.router as ModifiedRouter | null;
