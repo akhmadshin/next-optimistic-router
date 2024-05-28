@@ -1,7 +1,7 @@
 {
   "name": "next-optimistic-link",
   "author": "Vadim Akhmadshin",
-  "version": "0.0.4-rc.5",
+  "version": "0.0.4-rc.6",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,6 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
-  "prepublishOnly": "npm run build",
   "peerDependencies": {
     "next": "^14.2.3",
     "react": "^18.2.0",
