@@ -1,6 +1,6 @@
-import { NextRouter, SingletonRouter } from 'next/router';
+import { NextRouter } from 'next/router';
 
-export declare const usePageDataOptions: <T>(router: NextRouter, singletonRouter: SingletonRouter, withTrailingSlash: boolean) => {
+export declare const usePageDataOptions: <T>(router: NextRouter, withTrailingSlash: boolean) => {
     queryKey: string[];
     queryFn: () => Promise<never>;
 };

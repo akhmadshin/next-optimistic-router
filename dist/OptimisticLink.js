@@ -1,38 +1,38 @@
-import { jsx as k } from "react/jsx-runtime";
+import { jsx as u } from "react/jsx-runtime";
 import { forwardRef as d, useContext as C } from "react";
-import { OptimisticLinkContext as g } from "./OptimisticLinkProvider.js";
-const P = d(function(c, f) {
+import { OptimisticLinkContext as h } from "./OptimisticLinkProvider.js";
+const g = d(function(c, f) {
   const {
     onClick: e,
     onKeyPress: i,
-    children: l,
-    link: p,
-    ...a
-  } = c, { pathnameModifier: r, singletonRouter: o } = C(g), m = (n) => {
+    children: p,
+    link: a,
+    ...m
+  } = c, { pathnameModifier: r, singletonRouter: t } = C(h), k = (n) => {
     e && e(n), s();
-  }, u = (n) => {
+  }, l = (n) => {
     i && i(n);
-    const { key: t } = n;
-    ["Space", "Enter"].includes(t) && s();
+    const { key: o } = n;
+    ["Space", "Enter"].includes(o) && s();
   }, s = () => {
-    const n = o == null ? void 0 : o.router;
-    console.log("singletonRouter = ", o), n && r && (n.getRouteInfo = (t) => n.getRouteInfoOnly({
-      ...t,
-      singletonRouter: o,
+    const n = t == null ? void 0 : t.router;
+    n && r && (n.getRouteInfo = (o) => n.getRouteInfoOnly({
+      ...o,
+      singletonRouter: t,
       pathnameModifier: r
     }));
   };
-  return /* @__PURE__ */ k(
-    p,
+  return /* @__PURE__ */ u(
+    a,
     {
-      onClick: m,
-      onKeyPress: u,
+      onClick: k,
+      onKeyPress: l,
       ref: f,
-      ...a,
-      children: l
+      ...m,
+      children: p
     }
   );
 });
 export {
-  P as OptimisticLink
+  g as OptimisticLink
 };
