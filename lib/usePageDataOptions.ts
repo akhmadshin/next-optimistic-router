@@ -5,7 +5,7 @@ import { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './route
 import { buildRoute } from './router-utils/build-route';
 import type { NextRouter, SingletonRouter } from 'next/router';
 
-export const usePageDataOptions = <T>(router: NextRouter, singletonRouter: SingletonRouter) => {
+export const usePageDataOptions = <T>(router: NextRouter, singletonRouter: SingletonRouter, withTrailingSlash: boolean) => {
   const { pathnameModifier } = useContext(OptimisticLinkContext);
 
   const queryFn = useCallback(async () => {
@@ -74,7 +74,7 @@ export const usePageDataOptions = <T>(router: NextRouter, singletonRouter: Singl
 
     let pathname = buildRoute(router.route, router.query as Record<string, string>);
 
-    if (process.env.__NEXT_TRAILING_SLASH && !pathname.endsWith('/')) {
+    if (withTrailingSlash && !pathname.endsWith('/')) {
       pathname = `${pathname}/`
     }
 
