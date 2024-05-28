@@ -5,7 +5,7 @@ import { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './route
 import { buildRoute } from './router-utils/build-route';
 import type { NextRouter, SingletonRouter } from 'next/router';
 
-export const usePageDataOptions = <T>(router: NextRouter, singletonRouter?: SingletonRouter) => {
+export const usePageDataOptions = <T>(router: NextRouter, singletonRouter: SingletonRouter) => {
   const { pathnameModifier } = useContext(OptimisticLinkContext);
 
   const queryFn = useCallback(async () => {
