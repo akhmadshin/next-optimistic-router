@@ -3,10 +3,10 @@ import { OptimisticLinkContext } from './OptimisticLinkProvider';
 import { resolveDynamicRoute } from './router-utils/resolve-dynamic-route';
 import { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './router-extensions/types';
 import { buildRoute } from './router-utils/build-route';
-import type { NextRouter, SingletonRouter } from 'next/router';
+import type { NextRouter } from 'next/router';
 
-export const usePageDataOptions = <T>(router: NextRouter, singletonRouter: SingletonRouter, withTrailingSlash: boolean) => {
-  const { pathnameModifier } = useContext(OptimisticLinkContext);
+export const usePageDataOptions = <T>(router: NextRouter, withTrailingSlash: boolean) => {
+  const { pathnameModifier, singletonRouter } = useContext(OptimisticLinkContext);
 
   const queryFn = useCallback(async () => {
     const pageRouter = singletonRouter?.router as ModifiedRouter | null;
@@ -48,12 +48,7 @@ export const usePageDataOptions = <T>(router: NextRouter, singletonRouter: Singl
 
     delete pageRouter.components[componentPath];
 
-
-    try {
-      await router.push(url, asPath);
-    } catch (e) {
-      console.log('usePageDataOptions e = ', e);
-    }
+    await router.push(url, asPath);
 
     pageRouter.getRouteInfo = pageRouter.getRouteInfoOrig;
     pageRouter.onlyAHashChange = pageRouter.onlyAHashChangeOrig;
@@ -87,8 +82,6 @@ export const usePageDataOptions = <T>(router: NextRouter, singletonRouter: Singl
 
   const queryKey = useMemo(() => {
     const resolvedUrl = getResolvedUrl();
-
-    console.log('usePageDataOptions queryKey = ', resolvedUrl);
     return [resolvedUrl];
   }, [router, pathnameModifier])
 

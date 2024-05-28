@@ -28,7 +28,6 @@ export const getRouteInfoOnly = async ({ singletonRouter, ...props}: GetRouteInf
     locale,
     pathnameModifier,
   } = props;
-  console.log('getRouteInfoOnly start = ', singletonRouter);
 
   /**
    * PageRouter.router! `route` binding can change if there's a rewrite
@@ -95,7 +94,6 @@ export const getRouteInfoOnly = async ({ singletonRouter, ...props}: GetRouteInf
 
     return routeInfo
   } catch (err) {
-    console.log('getRouteInfoOnly error = ', err);
     pageRouter.getRouteInfo = pageRouter.getRouteInfoOrig;
     pageRouter.onlyAHashChange = pageRouter.onlyAHashChangeOrig;
 
