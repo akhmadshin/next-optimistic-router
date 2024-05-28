@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import { glob } from 'glob'
 import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
+import modify from 'rollup-plugin-modify'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,11 +12,12 @@ export default defineConfig({
     react(),
     dts({ include: ['lib'] })
   ],
+
   build: {
     copyPublicDir: false,
     lib: {
       entry: resolve(__dirname, 'lib/index.ts'),
-      formats: ['es']
+      formats: ['es'],
     },
     rollupOptions: {
       external: [
@@ -25,8 +27,7 @@ export default defineConfig({
         'next/router',
         'next/link',
         'next/dist',
-        'next/dist/client/link',
-        'next/dist/client/router'
+        'next/router'
       ],
       input: Object.fromEntries(
         // https://rollupjs.org/configuration-options/#input
@@ -45,6 +46,7 @@ export default defineConfig({
       output: {
         assetFileNames: 'assets/[name][extname]',
         entryFileNames: '[name].js',
+        format: 'es',
       }
     }
   }

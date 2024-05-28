@@ -1,9 +1,8 @@
 import { GetRouteInfoWithOnLoadProps, ModifiedRouter } from './types';
-import PageRouter from 'next/dist/client/router';
 
-export const getRouteInfoWithOnLoad = async ({ onLoad, ...props}: GetRouteInfoWithOnLoadProps,
+export const getRouteInfoWithOnLoad = async ({ onLoad, singletonRouter, ...props}: GetRouteInfoWithOnLoadProps,
 ) => {
-  const pageRouter = PageRouter.router as ModifiedRouter | null;
+  const pageRouter = singletonRouter?.router as ModifiedRouter | null;
 
   if (!pageRouter) {
     throw new Error('router singleton is undefined');

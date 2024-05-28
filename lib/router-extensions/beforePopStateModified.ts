@@ -1,5 +1,5 @@
 import { ModifiedRouter } from './types';
-import PageRouter from 'next/dist/client/router';
+import type { SingletonRouter } from 'next/router';
 
 interface TransitionOptions {
   shallow?: boolean
@@ -14,12 +14,12 @@ interface NextHistoryState {
   options: TransitionOptions
 }
 
-type BeforePopStateCallback = (state: NextHistoryState) => boolean
+export type BeforePopStateCallback = (state: NextHistoryState) => boolean
 
 // Because beforePopState supports only one callback
 // https://github.com/vercel/next.js/discussions/34835
-export const beforePopStateModified = (cb: BeforePopStateCallback) => {
-  const pageRouter = PageRouter.router as ModifiedRouter | null;
+export const beforePopStateModified = (cb: BeforePopStateCallback, singletonRouter?: SingletonRouter) => {
+  const pageRouter = singletonRouter?.router as ModifiedRouter | null;
 
   if (!pageRouter) {
     throw new Error('router singleton is undefined');

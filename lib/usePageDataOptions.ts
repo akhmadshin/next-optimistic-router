@@ -3,14 +3,13 @@ import { OptimisticLinkContext } from './OptimisticLinkProvider';
 import { resolveDynamicRoute } from './router-utils/resolve-dynamic-route';
 import { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './router-extensions/types';
 import { buildRoute } from './router-utils/build-route';
-import PageRouter, { useRouter } from 'next/dist/client/router';
+import type { Router } from 'next/router';
 
-export const usePageDataOptions = <T>() => {
-  const pathnameModifier = useContext(OptimisticLinkContext);
-  const router = useRouter();
+export const usePageDataOptions = <T>(router: Router) => {
+  const { pathnameModifier, singletonRouter } = useContext(OptimisticLinkContext);
 
   const queryFn = useCallback(async () => {
-    const pageRouter = PageRouter.router as ModifiedRouter | null;
+    const pageRouter = singletonRouter?.router as ModifiedRouter | null;
     if (!pageRouter) {
       throw new Error('router singleton is undefined');
     }
@@ -19,6 +18,7 @@ export const usePageDataOptions = <T>() => {
 
     pageRouter.onlyAHashChange = pageRouter.onlyAHashChangeNever;
     pageRouter.getRouteInfo = async (props: GetRouteInfoProps) => pageRouter.getRouteInfoWithOnLoad({
+      singletonRouter,
       ...props,
       onLoad: async (res: GetRouteInfoResponse) => {
         if ('type' in res && res.type === 'redirect-internal') {
@@ -41,14 +41,19 @@ export const usePageDataOptions = <T>() => {
 
     const modifiedAsPath = pageRouter.asPath.split('#')[0].split('?')[0];
 
-    const componentPath = await resolveDynamicRoute(pathnameModifier(modifiedAsPath));
+    const componentPath = await resolveDynamicRoute(pathnameModifier(modifiedAsPath), singletonRouter);
     const asPath = pageRouter.asPath;
 
     const url = getResolvedUrl();
 
     delete pageRouter.components[componentPath];
 
-    await pageRouter.push(url, asPath);
+
+    try {
+      await router.push(url, asPath);
+    } catch (e) {
+      console.log('usePageDataOptions e = ', e);
+    }
 
     pageRouter.getRouteInfo = pageRouter.getRouteInfoOrig;
     pageRouter.onlyAHashChange = pageRouter.onlyAHashChangeOrig;

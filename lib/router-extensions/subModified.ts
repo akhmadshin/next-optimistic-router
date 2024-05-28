@@ -1,9 +1,9 @@
 import type { AppComponent, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
 import { ModifiedRouter } from './types';
-import PageRouter from 'next/dist/client/router';
+import type { SingletonRouter } from 'next/router';
 
-export const subModified = (info: PrivateRouteInfo, App: AppComponent, scroll: { x: number; y: number } | null) => {
-  const pageRouter = PageRouter.router as ModifiedRouter | null;
+export const subModified = (info: PrivateRouteInfo, App: AppComponent, scroll: { x: number; y: number } | null, singletonRouter?: SingletonRouter) => {
+  const pageRouter = singletonRouter?.router as ModifiedRouter | null;
 
   if (!pageRouter) {
     throw new Error('router singleton is undefined');

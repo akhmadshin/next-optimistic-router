@@ -1,6 +1,7 @@
 import type { Router } from 'next/dist/client/router';
 import type { AppComponent, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
 import type { ParsedUrlQuery } from 'querystring';
+import type { SingletonRouter } from 'next/router';
 
 export interface GetRouteInfoProps {
   route: string
@@ -18,6 +19,9 @@ export interface GetRouteInfoProps {
   isNotFound?: boolean
 }
 
+type GetRouteInfoPropsWithRouter = GetRouteInfoProps & {
+  singletonRouter?: SingletonRouter;
+}
 interface RouteProperties {
   shallow: boolean;
 }
@@ -35,8 +39,8 @@ export type GetRouteInfoResponse = {
   newUrl: string;
 } | PrivateRouteInfo;
 
-export type GetRouteInfoWithPathnameModifierProps = GetRouteInfoProps & { pathnameModifier: PathnameModifier };
-export type GetRouteInfoWithOnLoadProps = GetRouteInfoProps & {
+export type GetRouteInfoWithPathnameModifierProps = GetRouteInfoPropsWithRouter & { pathnameModifier: PathnameModifier };
+export type GetRouteInfoWithOnLoadProps = GetRouteInfoPropsWithRouter & {
   onLoad: (res: GetRouteInfoResponse) => void;
 };
 
@@ -48,7 +52,7 @@ type Subscription = (data: PrivateRouteInfo, App: AppComponent, resetScroll: {
 
 export type ModifiedRouter = Router & {
   getRouteInfoOrig: GetRouteInfo
-  getRouteInfoOnly: GetRouteInfo<GetRouteInfoProps & { pathnameModifier: (pathname: string) => string }>
+  getRouteInfoOnly: GetRouteInfo<GetRouteInfoWithPathnameModifierProps>
   getRouteInfoWithOnLoad: GetRouteInfo<GetRouteInfoWithOnLoadProps>
   onlyAHashChangeNever: () => boolean
   onlyAHashChangeOrig: (as: string) => boolean

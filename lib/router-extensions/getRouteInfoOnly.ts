@@ -11,10 +11,8 @@
 import type { CompletePrivateRouteInfo, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
 import { GetRouteInfoWithPathnameModifierProps, ModifiedRouter } from './types';
 import { resolveDynamicRoute } from '../router-utils/resolve-dynamic-route';
-import PageRouter from 'next/dist/client/router';
 
-
-export const getRouteInfoOnly = async (props: GetRouteInfoWithPathnameModifierProps): Promise<{
+export const getRouteInfoOnly = async ({ singletonRouter, ...props}: GetRouteInfoWithPathnameModifierProps): Promise<{
   type: "redirect-external";
   destination: string;
 } | {
@@ -30,6 +28,8 @@ export const getRouteInfoOnly = async (props: GetRouteInfoWithPathnameModifierPr
     locale,
     pathnameModifier,
   } = props;
+  console.log('getRouteInfoOnly start = ', singletonRouter);
+
   /**
    * PageRouter.router! `route` binding can change if there's a rewrite
    * so we keep a reference to the original requested route
@@ -38,9 +38,9 @@ export const getRouteInfoOnly = async (props: GetRouteInfoWithPathnameModifierPr
    */
   const requestedPathname = requestedResolvedAs.split('#')[0].split('?')[0];
   const resolvedAs = pathnameModifier ? pathnameModifier(requestedPathname) : requestedPathname
-  const route = await resolveDynamicRoute(resolvedAs);
+  const route = await resolveDynamicRoute(resolvedAs, singletonRouter);
 
-  const pageRouter = PageRouter.router as ModifiedRouter | null;
+  const pageRouter = singletonRouter?.router as ModifiedRouter | null;
 
   if (!pageRouter) {
     throw new Error('router singleton is undefined');
@@ -60,8 +60,8 @@ export const getRouteInfoOnly = async (props: GetRouteInfoWithPathnameModifierPr
     )
 
     if (process.env.NODE_ENV !== 'production') {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       const reactIsModule = await import('next/dist/compiled/react-is');
       const isValidElementType = reactIsModule.isValidElementType;
       if (!isValidElementType(routeInfo.Component)) {
@@ -95,6 +95,7 @@ export const getRouteInfoOnly = async (props: GetRouteInfoWithPathnameModifierPr
 
     return routeInfo
   } catch (err) {
+    console.log('getRouteInfoOnly error = ', err);
     pageRouter.getRouteInfo = pageRouter.getRouteInfoOrig;
     pageRouter.onlyAHashChange = pageRouter.onlyAHashChangeOrig;
 

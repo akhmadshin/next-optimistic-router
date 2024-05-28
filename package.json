@@ -1,7 +1,7 @@
 {
   "name": "next-optimistic-link",
   "author": "Vadim Akhmadshin",
-  "version": "0.0.3",
+  "version": "0.0.4-rc.0",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,8 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "next": "^14.2.3",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.5",
     "@types/node": "^20.8.10",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
@@ -35,10 +36,14 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
     "glob": "^10.3.10",
+    "next": "^14.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.0",
     "vite-plugin-dts": "^3.6.3"
+  },
+  "dependencies": {
+    "rollup-plugin-modify": "^3.0.0"
   }
 }
