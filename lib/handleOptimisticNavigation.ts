@@ -4,13 +4,19 @@ import { SingletonRouter } from 'next/router';
 import type { Url } from 'next/dist/shared/lib/router/router';
 import { formatWithValidation } from 'next/dist/shared/lib/router/utils/format-url';
 
-export const handleOptimisticNavigation = (href: Url, singletonRouter: SingletonRouter) => {
+export const handleOptimisticNavigation = (href: Url, singletonRouter: SingletonRouter, onLocalNavigation: () => void) => {
   const urlAsString = typeof href === 'string' ? href : formatWithValidation(href)
   const isLocal = isLocalURL(urlAsString);
-
-  if (!isLocal || urlAsString.startsWith('#')) {
+  if (!isLocal) {
     return;
   }
+
+  onLocalNavigation();
+
+  if (urlAsString.startsWith('#')) {
+    return;
+  }
+
   const pageRouter = singletonRouter?.router as ModifiedRouter | null;
   if (!pageRouter || !pageRouter.getRouteInfoOnly) {
     return;

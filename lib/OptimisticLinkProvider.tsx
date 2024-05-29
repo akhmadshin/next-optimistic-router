@@ -12,12 +12,12 @@ import type { SingletonRouter } from 'next/router';
 import type { AppComponent, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
 
 interface Props {
-  pathnameModifier: (pathname: string) => string;
+  pathModifier: (path: string) => string;
   singletonRouter?: SingletonRouter;
 }
 
-const defaultPathnameModified = (route: string) => route;
-export const OptimisticLinkContext = createContext<Props>({ pathnameModifier: defaultPathnameModified, singletonRouter: undefined });
+const defaultPathModifier = (route: string) => route;
+export const OptimisticLinkContext = createContext<Props>({ pathModifier: defaultPathModifier, singletonRouter: undefined });
 
 export const patchRouter = (pathnameModifier: (pathname: string) => string = (route) => route, singletonRouter?: SingletonRouter) => {
   // if (typeof window === 'undefined') {
@@ -61,11 +61,11 @@ export const patchRouter = (pathnameModifier: (pathname: string) => string = (ro
   pageRouter.beforePopState = ((cb: BeforePopStateCallback) => beforePopStateModified(cb, singletonRouter)).bind(pageRouter);
 }
 
-export const OptimisticLinkProvider: FC<PropsWithChildren<Props>> = ({ pathnameModifier, singletonRouter, children }) => {
-  patchRouter(pathnameModifier, singletonRouter);
+export const OptimisticLinkProvider: FC<PropsWithChildren<Props>> = ({ pathModifier, singletonRouter, children }) => {
+  patchRouter(pathModifier, singletonRouter);
 
   return (
-    <OptimisticLinkContext.Provider value={{ pathnameModifier, singletonRouter }}>
+    <OptimisticLinkContext.Provider value={{ pathModifier, singletonRouter }}>
       {children}
     </OptimisticLinkContext.Provider>
   )

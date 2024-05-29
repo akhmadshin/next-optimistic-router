@@ -1,7 +1,7 @@
 {
   "name": "next-optimistic-link",
   "author": "Vadim Akhmadshin",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -41,8 +41,5 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.0",
     "vite-plugin-dts": "^3.6.3"
-  },
-  "dependencies": {
-    "rollup-plugin-modify": "^3.0.0"
   }
 }
