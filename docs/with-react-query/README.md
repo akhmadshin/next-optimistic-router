@@ -30,8 +30,8 @@ export default function App({ Component, pageProps }: AppProps) {
   );
 }
 ```
-If you have middleware file with NextResponse.rewrite calls for some routes, you won't see changes in link behaviour when
-navigating to those routes. To fix it, you need to duplicate rewrite logic from middleware in pathnameModifier function.
+If you have middleware file with NextResponse.rewrite calls for some routes, you won't see changes in link behaviour when 
+navigating to those routes. To fix it, you need to duplicate rewrite logic from middleware in pathnameModifier function. 
 Let's consider you have middleware file like this
 
 ```ts
