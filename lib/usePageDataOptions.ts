@@ -6,7 +6,7 @@ import { buildRoute } from './router-utils/build-route';
 import type { NextRouter } from 'next/router';
 
 export const usePageDataOptions = <T>(router: NextRouter, withTrailingSlash: boolean) => {
-  const { pathnameModifier, singletonRouter } = useContext(OptimisticLinkContext);
+  const { pathModifier, singletonRouter } = useContext(OptimisticLinkContext);
 
   const queryFn = useCallback(async () => {
     const pageRouter = singletonRouter?.router as ModifiedRouter | null;
@@ -41,7 +41,7 @@ export const usePageDataOptions = <T>(router: NextRouter, withTrailingSlash: boo
 
     const modifiedAsPath = pageRouter.asPath.split('#')[0].split('?')[0];
 
-    const componentPath = await resolveDynamicRoute(pathnameModifier(modifiedAsPath), singletonRouter);
+    const componentPath = await resolveDynamicRoute(pathModifier(modifiedAsPath), singletonRouter);
     const asPath = pageRouter.asPath;
 
     const url = getResolvedUrl();
@@ -77,13 +77,13 @@ export const usePageDataOptions = <T>(router: NextRouter, withTrailingSlash: boo
       pathname = `${pathname}?${query}`
     }
 
-    return pathnameModifier(pathname)
+    return pathModifier(pathname)
   }
 
   const queryKey = useMemo(() => {
     const resolvedUrl = getResolvedUrl();
     return [resolvedUrl];
-  }, [router, pathnameModifier])
+  }, [router, pathModifier])
 
   return {
     queryKey,
