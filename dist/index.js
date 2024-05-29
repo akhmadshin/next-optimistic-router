@@ -1,8 +1,8 @@
-import { OptimisticLink as o } from "./OptimisticLink.js";
+import { handleOptimisticNavigation as o } from "./handleOptimisticNavigation.js";
 import { OptimisticLinkProvider as e } from "./OptimisticLinkProvider.js";
-import { usePageDataOptions as m } from "./usePageDataOptions.js";
+import { usePageDataOptions as p } from "./usePageDataOptions.js";
 export {
-  o as OptimisticLink,
   e as OptimisticLinkProvider,
-  m as usePageDataOptions
+  o as handleOptimisticNavigation,
+  p as usePageDataOptions
 };
