@@ -1,11 +1,13 @@
 import { isLocalURL } from 'next/dist/shared/lib/router/utils/is-local-url';
 import { ModifiedRouter } from './router-extensions/types.ts';
 import { SingletonRouter } from 'next/router';
+import { formatWithValidation } from 'next/dist/shared/lib/router/utils/format-url';
 
 export const handleOptimisticNavigation = (href: string, singletonRouter: SingletonRouter) => {
-  const isLocal = isLocalURL(href as string);
+  const urlAsString = typeof href === 'string' ? href : formatWithValidation(href)
+  const isLocal = isLocalURL(urlAsString);
 
-  if (!isLocal || href.startsWith('#')) {
+  if (!isLocal || urlAsString.startsWith('#')) {
     return;
   }
   const pageRouter = singletonRouter?.router as ModifiedRouter | null;
