@@ -31,7 +31,7 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 ```
 If you have middleware file with NextResponse.rewrite calls for some routes, you won't see changes in link behaviour when
-navigating to those routes. To fix it, you need to duplicate rewrite logic from middleware in pathnameModifier function.
+navigating to those routes. To fix it, you need to duplicate rewrite logic from middleware in pathModifier function.
 Let's consider you have middleware file like this
 
 ```ts
@@ -67,7 +67,7 @@ import { useCallback } from 'react';
 import { OptimisticLinkProvider } from 'next-optimistic-link';
 
 export default function App({ Component, pageProps }: AppProps) {
-  const pathnameModifier = useCallback((pathname: string) => {
+  const pathModifier = useCallback((pathname: string) => {
     const defaultLocale = process.env.NEXT_PUBLIC_DEFAULT_LOCALE;
     const localeCodes = process.env.NEXT_PUBLIC_LOCALES!.split(',');
 
@@ -79,7 +79,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <OptimisticLinkProvider pathnameModifier={pathnameModifier} singletonRouter={singletonRouter}>
+    <OptimisticLinkProvider pathModifier={pathModifier} singletonRouter={singletonRouter}>
       <Component {...pageProps} />
     </OptimisticLinkProvider>
   );
@@ -277,6 +277,7 @@ import singletonRouter from 'next/router';
 import { handleOptimisticNavigation } from 'next-optimistic-link';
 import type { AnchorHTMLAttributes, MouseEvent, PropsWithChildren } from 'react';
 import React from 'react';
+import console = require('console');
 
 type NextLinkProps = PropsWithChildren<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> &
   LinkProps>
@@ -287,12 +288,14 @@ export const Link: React.FC<PropsWithChildren<NextLinkProps>> = (props) => {
     children,
     ...restProps
   } = props;
+
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     if (onClick) {
       onClick(e);
     }
-    handleOptimisticNavigation(props.href, singletonRouter);
+    handleOptimisticNavigation(props.href, singletonRouter, handleLocalNavigation);
   }
+  const handleLocalNavigation = () => {}
 
   return (
     <NextLink
