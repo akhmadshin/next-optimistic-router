@@ -1,7 +1,7 @@
 {
-  "name": "next-optimistic-link",
+  "name": "next-optimistic-router",
   "author": "Vadim Akhmadshin",
-  "version": "0.0.7-rc.1",
+  "version": "0.0.2-rc.1",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/akhmadshin/next-optimistic-link.git"
+    "url": "git+https://github.com/akhmadshin/next-optimistic-router.git"
   },
   "scripts": {
     "build": "tsc --p ./tsconfig-build.json && vite build",

@@ -1,4 +1,4 @@
-# next-optimistic-link
+# next-optimistic-router
 
 > This library makes navigation truly instantaneous, without prefetching or caching. Also you can think about that library as a glue between next.js and tanstack-query/swr.
 
@@ -6,10 +6,10 @@
 
 
 ```sh
-$ npm install next-optimistic-link
+$ npm install next-optimistic-router
 ```
 ```sh
-$ yarn add next-optimistic-link
+$ yarn add next-optimistic-router
 ```
 
 ## Usage with @tanstack/react-query
@@ -20,7 +20,7 @@ $ yarn add next-optimistic-link
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import singletonRouter from 'next/dist/client/router';
-import { OptimisticLinkProvider } from 'next-optimistic-link';
+import { OptimisticLinkProvider } from 'next-optimistic-router';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -64,7 +64,7 @@ import type { AppProps } from "next/app";
 import process from 'process';
 import singletonRouter from 'next/dist/client/router';
 import { useCallback } from 'react';
-import { OptimisticLinkProvider } from 'next-optimistic-link';
+import { OptimisticLinkProvider } from 'next-optimistic-router';
 
 export default function App({ Component, pageProps }: AppProps) {
   const pathnameModifier = useCallback((pathname: string) => {
@@ -246,7 +246,7 @@ pages/
 ### 3) Create usePageData hook
 ```ts
 import { useQuery } from '@tanstack/react-query';
-import { usePageDataOptions } from 'next-optimistic-link';
+import { usePageDataOptions } from 'next-optimistic-router';
 import { useRouter } from 'next/router';
 
 export const usePageData = <T>() => {
@@ -274,7 +274,7 @@ const { data: article, isLoading, isFetching, isStale} = usePageData<BlogItemPag
 import type { LinkProps } from 'next/link';
 import NextLink from 'next/link';
 import singletonRouter from 'next/router';
-import { handleOptimisticNavigation } from 'next-optimistic-link';
+import { handleOptimisticNavigation } from 'next-optimistic-router';
 import type { AnchorHTMLAttributes, MouseEvent, PropsWithChildren } from 'react';
 import React from 'react';
 
