@@ -61,7 +61,7 @@ export const patchRouter = (pathnameModifier: (pathname: string) => string = (ro
   pageRouter.beforePopState = ((cb: BeforePopStateCallback) => beforePopStateModified(cb, singletonRouter)).bind(pageRouter);
 }
 
-export const OptimisticLinkProvider: FC<PropsWithChildren<Props>> = ({ pathModifier, singletonRouter, children }) => {
+export const OptimisticRouterProvider: FC<PropsWithChildren<Props>> = ({ pathModifier, singletonRouter, children }) => {
   patchRouter(pathModifier, singletonRouter);
 
   return (

@@ -1,5 +1,5 @@
 import { useContext as g, useCallback as y, useMemo as m } from "react";
-import { OptimisticLinkContext as P } from "./OptimisticLinkProvider.js";
+import { OptimisticLinkContext as P } from "./OptimisticRouterProvider.js";
 import { resolveDynamicRoute as C } from "./router-utils/resolve-dynamic-route.js";
 import { buildRoute as R } from "./router-utils/build-route.js";
 const I = (n, p) => {

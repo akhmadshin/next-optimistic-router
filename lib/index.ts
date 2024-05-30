@@ -1,3 +1,3 @@
 export { handleOptimisticNavigation } from './handleOptimisticNavigation';
-export { OptimisticLinkProvider } from './OptimisticLinkProvider';
+export { OptimisticRouterProvider } from './OptimisticRouterProvider';
 export { usePageDataOptions } from './usePageDataOptions';

@@ -14,19 +14,19 @@ $ yarn add next-optimistic-router
 
 ## Usage with @tanstack/react-query
 
-### 1) Wrap _app into OptimisticLinkProvider
+### 1) Wrap _app into OptimisticRouterProvider
 
 ```tsx
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import singletonRouter from 'next/dist/client/router';
-import { OptimisticLinkProvider } from 'next-optimistic-router';
+import { OptimisticRouterProvider } from 'next-optimistic-router';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <OptimisticLinkProvider singletonRouter={singletonRouter}>
+    <OptimisticRouterProvider singletonRouter={singletonRouter}>
       <Component {...pageProps} />
-    </OptimisticLinkProvider>
+    </OptimisticRouterProvider>
   );
 }
 ```
@@ -64,7 +64,7 @@ import type { AppProps } from "next/app";
 import process from 'process';
 import singletonRouter from 'next/dist/client/router';
 import { useCallback } from 'react';
-import { OptimisticLinkProvider } from 'next-optimistic-router';
+import { OptimisticRouterProvider } from 'next-optimistic-router';
 
 export default function App({ Component, pageProps }: AppProps) {
   const pathnameModifier = useCallback((pathname: string) => {
@@ -79,9 +79,9 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <OptimisticLinkProvider pathnameModifier={pathnameModifier} singletonRouter={singletonRouter}>
+    <OptimisticRouterProvider pathnameModifier={pathnameModifier} singletonRouter={singletonRouter}>
       <Component {...pageProps} />
-    </OptimisticLinkProvider>
+    </OptimisticRouterProvider>
   );
 }
 ```
