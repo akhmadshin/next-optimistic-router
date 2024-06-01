@@ -12,7 +12,7 @@ import type { SingletonRouter } from 'next/router';
 import type { AppComponent, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
 
 interface Props {
-  pathModifier: (path: string) => string;
+  pathModifier?: (path: string) => string;
   singletonRouter?: SingletonRouter;
 }
 
