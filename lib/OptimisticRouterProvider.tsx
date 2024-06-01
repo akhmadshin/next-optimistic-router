@@ -16,8 +16,7 @@ interface Props {
   singletonRouter?: SingletonRouter;
 }
 
-const defaultPathModifier = (route: string) => route;
-export const OptimisticLinkContext = createContext<Props>({ pathModifier: defaultPathModifier, singletonRouter: undefined });
+export const OptimisticLinkContext = createContext<Props>({ pathModifier: undefined, singletonRouter: undefined });
 
 export const patchRouter = (pathnameModifier: (pathname: string) => string = (route) => route, singletonRouter?: SingletonRouter) => {
   // if (typeof window === 'undefined') {

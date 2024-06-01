@@ -41,7 +41,7 @@ export const usePageDataOptions = <T>(router: NextRouter, withTrailingSlash: boo
 
     const modifiedAsPath = pageRouter.asPath.split('#')[0].split('?')[0];
 
-    const componentPath = await resolveDynamicRoute(pathModifier(modifiedAsPath), singletonRouter);
+    const componentPath = await resolveDynamicRoute(pathModifier ? pathModifier(modifiedAsPath) : modifiedAsPath, singletonRouter);
     const asPath = pageRouter.asPath;
 
     const url = getResolvedUrl();
@@ -77,7 +77,7 @@ export const usePageDataOptions = <T>(router: NextRouter, withTrailingSlash: boo
       pathname = `${pathname}?${query}`
     }
 
-    return pathModifier(pathname)
+    return pathModifier ? pathModifier(pathname) : pathname
   }
 
   const queryKey = useMemo(() => {

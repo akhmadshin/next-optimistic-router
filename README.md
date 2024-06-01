@@ -293,9 +293,9 @@ export const Link: React.FC<PropsWithChildren<NextLinkProps>> = (props) => {
     if (onClick) {
       onClick(e);
     }
-    handleOptimisticNavigation(props.href, singletonRouter, handleLocalNavigation);
+    handleOptimisticNavigation(props.href, singletonRouter, onLocalNavigation);
   }
-  const handleLocalNavigation = () => {}
+  const onLocalNavigation = () => {}
 
   return (
     <NextLink
