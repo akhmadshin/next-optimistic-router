@@ -16,12 +16,12 @@ interface Props {
   singletonRouter?: SingletonRouter;
 }
 
-export const OptimisticLinkContext = createContext<Props>({ pathModifier: undefined, singletonRouter: undefined });
+export const OptimisticRouterContext = createContext<Props>({ pathModifier: undefined, singletonRouter: undefined });
 
 export const patchRouter = (pathnameModifier: (pathname: string) => string = (route) => route, singletonRouter?: SingletonRouter) => {
-  // if (typeof window === 'undefined') {
-  //   return;
-  // }
+  if (typeof window === 'undefined') {
+    return;
+  }
 
   const pageRouter = singletonRouter?.router as ModifiedRouter | null;
   if (!pageRouter) {
@@ -64,9 +64,9 @@ export const OptimisticRouterProvider: FC<PropsWithChildren<Props>> = ({ pathMod
   patchRouter(pathModifier, singletonRouter);
 
   return (
-    <OptimisticLinkContext.Provider value={{ pathModifier, singletonRouter }}>
+    <OptimisticRouterContext.Provider value={{ pathModifier, singletonRouter }}>
       {children}
-    </OptimisticLinkContext.Provider>
+    </OptimisticRouterContext.Provider>
   )
 }
 
