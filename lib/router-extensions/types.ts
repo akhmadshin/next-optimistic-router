@@ -41,21 +41,22 @@ export type GetRouteInfoResponse = {
 
 export type GetRouteInfoWithPathnameModifierProps = GetRouteInfoPropsWithRouter & { pathnameModifier: PathnameModifier };
 export type GetRouteInfoWithOnLoadProps = GetRouteInfoPropsWithRouter & {
-  onLoad: (res: GetRouteInfoResponse) => void;
+  onLoad: (res: GetRouteInfoResponse) => Promise<void>;
 };
 
-type Subscription = (data: PrivateRouteInfo, App: AppComponent, resetScroll: {
+export type Subscription = (data: PrivateRouteInfo, App: AppComponent, resetScroll: {
   x: number;
   y: number;
 } | null) => Promise<void>;
 
+export type OnlyHashChange = (as: string) => boolean
 
 export type ModifiedRouter = Router & {
   getRouteInfoOrig: GetRouteInfo
   getRouteInfoOnly: GetRouteInfo<GetRouteInfoWithPathnameModifierProps>
   getRouteInfoWithOnLoad: GetRouteInfo<GetRouteInfoWithOnLoadProps>
-  onlyAHashChangeNever: () => boolean
-  onlyAHashChangeOrig: (as: string) => boolean
+  onlyAHashChangeNever: OnlyHashChange
+  onlyAHashChangeOrig: OnlyHashChange
   subOrig: Subscription
   subModified: Subscription
 }

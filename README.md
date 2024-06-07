@@ -248,6 +248,7 @@ pages/
 import { useQuery } from '@tanstack/react-query';
 import { usePageDataOptions } from 'next-optimistic-router';
 import { useRouter } from 'next/router';
+import { DehydratedState } from '@tanstack/query-core/build/legacy/hydration';
 
 export const usePageData = <T>() => {
   const router = useRouter();
@@ -256,7 +257,9 @@ export const usePageData = <T>() => {
 
   return useQuery<unknown, unknown, T>({
     queryKey,
-    queryFn,
+    queryFn: () => queryFn().then((props: { dehydratedState: DehydratedState}) => {
+      return props?.dehydratedState ? props.dehydratedState.queries[0].state.data : props;
+    }),
     placeholderData,
     staleTime: 5 * 60 * 1000,
   });
@@ -293,9 +296,8 @@ export const Link: React.FC<PropsWithChildren<NextLinkProps>> = (props) => {
     if (onClick) {
       onClick(e);
     }
-    handleOptimisticNavigation(props.href, singletonRouter, onLocalNavigation);
+    handleOptimisticNavigation(props.href, singletonRouter);
   }
-  const onLocalNavigation = () => {}
 
   return (
     <NextLink

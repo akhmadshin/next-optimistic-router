@@ -30,7 +30,7 @@ export const subModified = (info: PrivateRouteInfo, App: AppComponent, scroll: {
   }
 
   if (withRerender) {
-    return pageRouter.subOrig!(info, App, scroll);
+    return pageRouter.subOrig(info, App, scroll);
   }
   return Promise.resolve();
 }

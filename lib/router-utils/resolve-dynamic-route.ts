@@ -1,14 +1,14 @@
 import { denormalizePagePath } from 'next/dist/shared/lib/page-path/denormalize-page-path';
 import { removeTrailingSlash } from './remove-trailing-slash';
 import { isDynamicRoute } from 'next/dist/shared/lib/router/utils';
-import { ModifiedRouter } from '../router-extensions/types.ts';
-import { getRouteRegex } from './route-regex.ts';
+import { ModifiedRouter } from '../router-extensions/types';
+import { getRouteRegex } from './route-regex';
 import type { SingletonRouter } from 'next/router';
 
 export async function resolveDynamicRoute(pathname: string, singletonRouter?: SingletonRouter) {
   const pageRouter = singletonRouter?.router as ModifiedRouter | null;
   if (!pageRouter) {
-    return '/404';
+    throw new Error('router singleton is undefined');
   }
 
   const pageLoader = pageRouter.pageLoader;

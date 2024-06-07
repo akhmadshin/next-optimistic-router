@@ -1,41 +1,41 @@
 import { useCallback, useContext, useMemo } from 'react';
 import { OptimisticRouterContext } from './OptimisticRouterProvider';
 import { resolveDynamicRoute } from './router-utils/resolve-dynamic-route';
-import { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './router-extensions/types';
+import type { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './router-extensions/types';
 import { buildRoute } from './router-utils/build-route';
 import type { NextRouter } from 'next/router';
 
-export const usePageDataOptions = <T>(router: NextRouter, withTrailingSlash: boolean) => {
+export const usePageDataOptions = (router: NextRouter, withTrailingSlash: boolean) => {
   const { pathModifier, singletonRouter } = useContext(OptimisticRouterContext);
 
-  const queryFn = useCallback(async () => {
+  const queryFn = useCallback(async (): Promise<object> => {
     const pageRouter = singletonRouter?.router as ModifiedRouter | null;
     if (!pageRouter) {
       throw new Error('router singleton is undefined');
     }
 
-    let pageProps: T | { notFound: true } | undefined = undefined;
+    let pageProps: object | { notFound: true } | undefined = undefined;
 
     pageRouter.onlyAHashChange = pageRouter.onlyAHashChangeNever;
     pageRouter.getRouteInfo = async (props: GetRouteInfoProps) => pageRouter.getRouteInfoWithOnLoad({
       singletonRouter,
       ...props,
-      onLoad: async (res: GetRouteInfoResponse) => {
+      onLoad: (res: GetRouteInfoResponse) => {
         if ('type' in res && res.type === 'redirect-internal') {
           pageRouter.getRouteInfo = pageRouter.getRouteInfoOrig;
           pageRouter.onlyAHashChange = pageRouter.onlyAHashChangeOrig;
-          return;
+          return Promise.resolve();
         }
         if ('props' in res) {
           if (res.props?.notFound) {
             pageProps = { notFound: true };
-            return;
+            return Promise.resolve();
           }
-          if (res.props && res.props.pageProps.dehydratedState) {
-            pageProps = res.props.pageProps.dehydratedState.queries[0].state.data;
+          if (res.props?.pageProps) {
+            pageProps = res.props.pageProps as object;
           }
         }
-
+        return Promise.resolve();
       },
     });
 

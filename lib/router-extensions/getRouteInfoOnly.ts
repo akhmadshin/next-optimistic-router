@@ -9,7 +9,7 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import type { CompletePrivateRouteInfo, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
-import { GetRouteInfoWithPathnameModifierProps, ModifiedRouter } from './types';
+import type { GetRouteInfoWithPathnameModifierProps, ModifiedRouter } from './types';
 import { resolveDynamicRoute } from '../router-utils/resolve-dynamic-route';
 
 export const getRouteInfoOnly = async ({ singletonRouter, ...props}: GetRouteInfoWithPathnameModifierProps): Promise<{
@@ -62,7 +62,9 @@ export const getRouteInfoOnly = async ({ singletonRouter, ...props}: GetRouteInf
       // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/ban-ts-comment
       // @ts-expect-error
       const reactIsModule = await import('next/dist/compiled/react-is');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
       const isValidElementType = reactIsModule.isValidElementType;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       if (!isValidElementType(routeInfo.Component)) {
         throw new Error(
           `The default export is not a React Component in page: "${pathname}"`
@@ -85,6 +87,7 @@ export const getRouteInfoOnly = async ({ singletonRouter, ...props}: GetRouteInf
 
     // we kick off a HEAD request in the background
     // when a non-prefetch request is made to signal revalidation
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     initialProps.pageProps = Object.assign({}, initialProps.pageProps)
     routeInfo.props = initialProps
     routeInfo.route = route

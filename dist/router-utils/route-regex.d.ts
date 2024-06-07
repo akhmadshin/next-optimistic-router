@@ -4,9 +4,7 @@ export interface Group {
     optional: boolean;
 }
 export interface RouteRegex {
-    groups: {
-        [groupName: string]: Group;
-    };
+    groups: Record<string, Group>;
     re: RegExp;
 }
 /**

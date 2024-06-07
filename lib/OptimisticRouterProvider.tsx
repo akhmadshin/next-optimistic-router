@@ -2,8 +2,9 @@ import { createContext, FC, PropsWithChildren } from 'react';
 import { getRouteInfoOnly } from './router-extensions/getRouteInfoOnly';
 import { getRouteInfoWithOnLoad } from './router-extensions/getRouteInfoWithOnLoad';
 import {
-  GetRouteInfoProps,
-  ModifiedRouter
+  GetRouteInfo,
+  GetRouteInfoProps, GetRouteInfoWithOnLoadProps, GetRouteInfoWithPathnameModifierProps,
+  ModifiedRouter, OnlyHashChange, Subscription
 } from './router-extensions/types';
 import { subModified } from './router-extensions/subModified';
 import { onlyAHashChangeNever } from './router-extensions/onlyAHashChangeNever';
@@ -29,7 +30,7 @@ export const patchRouter = (pathnameModifier: (pathname: string) => string = (ro
   }
 
   if (!pageRouter.getRouteInfoOrig) {
-    pageRouter.getRouteInfoOrig = pageRouter.getRouteInfo.bind(pageRouter);
+    pageRouter.getRouteInfoOrig = pageRouter.getRouteInfo.bind(pageRouter) as GetRouteInfo;
   }
 
   if (!pageRouter.getRouteInfoOnly) {
@@ -37,27 +38,27 @@ export const patchRouter = (pathnameModifier: (pathname: string) => string = (ro
       ...props,
       pathnameModifier,
       singletonRouter,
-    })).bind(pageRouter);
+    })).bind(pageRouter) as GetRouteInfo<GetRouteInfoWithPathnameModifierProps>;
   }
 
   if (!pageRouter.getRouteInfoWithOnLoad) {
-    pageRouter.getRouteInfoWithOnLoad = getRouteInfoWithOnLoad.bind(pageRouter);
+    pageRouter.getRouteInfoWithOnLoad = getRouteInfoWithOnLoad.bind(pageRouter) as GetRouteInfo<GetRouteInfoWithOnLoadProps>;
   }
   if (!pageRouter.subOrig && pageRouter.sub) {
-    pageRouter.subOrig = pageRouter.sub.bind(pageRouter);
+    pageRouter.subOrig = pageRouter.sub.bind(pageRouter) as Subscription;
   }
   if (!pageRouter.subModified) {
-    pageRouter.subModified = ((info: PrivateRouteInfo, App: AppComponent, scroll: { x: number; y: number } | null) => subModified(info, App, scroll, singletonRouter)).bind(pageRouter);
+    pageRouter.subModified = ((info: PrivateRouteInfo, App: AppComponent, scroll: { x: number; y: number } | null) => subModified(info, App, scroll, singletonRouter)).bind(pageRouter) as Subscription;
   }
-  pageRouter.sub = ((info: PrivateRouteInfo, App: AppComponent, scroll: { x: number; y: number } | null) => subModified(info, App, scroll, singletonRouter)).bind(pageRouter);
+  pageRouter.sub = ((info: PrivateRouteInfo, App: AppComponent, scroll: { x: number; y: number } | null) => subModified(info, App, scroll, singletonRouter)).bind(pageRouter) as Subscription;
 
   if (!pageRouter.onlyAHashChangeOrig) {
-    pageRouter.onlyAHashChangeOrig = pageRouter.onlyAHashChange.bind(pageRouter);
+    pageRouter.onlyAHashChangeOrig = pageRouter.onlyAHashChange.bind(pageRouter) as OnlyHashChange;
   }
   if (!pageRouter.onlyAHashChangeNever) {
-    pageRouter.onlyAHashChangeNever = onlyAHashChangeNever.bind(pageRouter);
+    pageRouter.onlyAHashChangeNever = onlyAHashChangeNever.bind(pageRouter) as OnlyHashChange;
   }
-  pageRouter.beforePopState = ((cb: BeforePopStateCallback) => beforePopStateModified(cb, singletonRouter)).bind(pageRouter);
+  pageRouter.beforePopState = ((cb: BeforePopStateCallback) => beforePopStateModified(cb, singletonRouter)).bind(pageRouter) as (cb: BeforePopStateCallback) => void;
 }
 
 export const OptimisticRouterProvider: FC<PropsWithChildren<Props>> = ({ pathModifier, singletonRouter, children }) => {

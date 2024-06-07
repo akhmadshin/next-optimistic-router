@@ -357,8 +357,9 @@ function D() {
 })(T);
 const Q = (e, o, u) => {
   const n = typeof e == "string" ? e : T.formatWithValidation(e);
-  if (!U.isLocalURL(n) || (u(), n.startsWith("#")))
+  if (!U.isLocalURL(n) || n.startsWith("#"))
     return;
+  u && u();
   const i = o == null ? void 0 : o.router;
   !i || !i.getRouteInfoOnly || (i.getRouteInfo = i.getRouteInfoOnly);
 };

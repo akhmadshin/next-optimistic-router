@@ -9,7 +9,7 @@ export interface Group {
 }
 
 export interface RouteRegex {
-  groups: { [groupName: string]: Group }
+  groups: Record<string, Group>
   re: RegExp
 }
 
@@ -35,7 +35,7 @@ function parseParameter(param: string) {
 
 function getParametrizedRoute(route: string) {
   const segments = removeTrailingSlash(route).slice(1).split('/')
-  const groups: { [groupName: string]: Group } = {}
+  const groups: Record<string, Group> = {}
   let groupIndex = 1
   return {
     parameterizedRoute: segments

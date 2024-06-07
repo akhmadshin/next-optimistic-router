@@ -30,8 +30,8 @@ export default function App({ Component, pageProps }: AppProps) {
   );
 }
 ```
-If you have middleware file with NextResponse.rewrite calls for some routes, you won't see changes in link behaviour when 
-navigating to those routes. To fix it, you need to duplicate rewrite logic from middleware in pathnameModifier function. 
+If you have middleware file with NextResponse.rewrite calls for some routes, you won't see changes in link behaviour when
+navigating to those routes. To fix it, you need to duplicate rewrite logic from middleware in pathModifier function.
 Let's consider you have middleware file like this
 
 ```ts
@@ -67,7 +67,7 @@ import { useCallback } from 'react';
 import { OptimisticRouterProvider } from 'next-optimistic-router';
 
 export default function App({ Component, pageProps }: AppProps) {
-  const pathnameModifier = useCallback((pathname: string) => {
+  const pathModifier = useCallback((pathname: string) => {
     const defaultLocale = process.env.NEXT_PUBLIC_DEFAULT_LOCALE;
     const localeCodes = process.env.NEXT_PUBLIC_LOCALES!.split(',');
 
@@ -79,7 +79,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <OptimisticRouterProvider pathnameModifier={pathnameModifier} singletonRouter={singletonRouter}>
+    <OptimisticRouterProvider pathModifier={pathModifier} singletonRouter={singletonRouter}>
       <Component {...pageProps} />
     </OptimisticRouterProvider>
   );
@@ -248,6 +248,7 @@ pages/
 import { useQuery } from '@tanstack/react-query';
 import { usePageDataOptions } from 'next-optimistic-router';
 import { useRouter } from 'next/router';
+import { DehydratedState } from '@tanstack/query-core/build/legacy/hydration';
 
 export const usePageData = <T>() => {
   const router = useRouter();
@@ -256,7 +257,9 @@ export const usePageData = <T>() => {
 
   return useQuery<unknown, unknown, T>({
     queryKey,
-    queryFn,
+    queryFn: () => queryFn().then((props: { dehydratedState: DehydratedState}) => {
+      return props?.dehydratedState ? props.dehydratedState.queries[0].state.data : props;
+    }),
     placeholderData,
     staleTime: 5 * 60 * 1000,
   });
@@ -277,6 +280,7 @@ import singletonRouter from 'next/router';
 import { handleOptimisticNavigation } from 'next-optimistic-router';
 import type { AnchorHTMLAttributes, MouseEvent, PropsWithChildren } from 'react';
 import React from 'react';
+import console = require('console');
 
 type NextLinkProps = PropsWithChildren<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> &
   LinkProps>
@@ -287,6 +291,7 @@ export const Link: React.FC<PropsWithChildren<NextLinkProps>> = (props) => {
     children,
     ...restProps
   } = props;
+
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     if (onClick) {
       onClick(e);

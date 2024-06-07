@@ -1,6 +1,6 @@
 import { i as _, g as S } from "../route-regex-CzSiWp1k.js";
 import { removeTrailingSlash as p } from "./remove-trailing-slash.js";
-var g = {}, d = {}, y = {};
+var g = {}, f = {}, w = {};
 (function(r) {
   Object.defineProperty(r, "__esModule", {
     value: !0
@@ -47,11 +47,11 @@ var g = {}, d = {}, y = {};
         let c = function(m, l) {
           if (m !== null && m !== l)
             throw new Error("You cannot use different slug names for the same dynamic path ('" + m + "' !== '" + l + "').");
-          t.forEach((f) => {
-            if (f === l)
+          t.forEach((d) => {
+            if (d === l)
               throw new Error('You cannot have the same slug name "' + l + '" repeat within a single dynamic path');
-            if (f.replace(/\W/g, "") === i.replace(/\W/g, ""))
-              throw new Error('You cannot have the slug names "' + f + '" and "' + l + '" differ only by non-word symbols within a single dynamic path');
+            if (d.replace(/\W/g, "") === i.replace(/\W/g, ""))
+              throw new Error('You cannot have the slug names "' + d + '" and "' + l + '" differ only by non-word symbols within a single dynamic path');
           }), t.push(l);
         }, n = i.slice(1, -1), h = !1;
         if (n.startsWith("[") && n.endsWith("]") && (n = n.slice(1, -1), h = !0), n.startsWith("...") && (n = n.substring(3), o = !0), n.startsWith("[") || n.endsWith("]"))
@@ -84,8 +84,8 @@ var g = {}, d = {}, y = {};
     const e = new s();
     return u.forEach((t) => e.insert(t)), e.smoosh();
   }
-})(y);
-var w = {};
+})(w);
+var y = {};
 (function(r) {
   Object.defineProperty(r, "__esModule", {
     value: !0
@@ -99,7 +99,7 @@ var w = {};
   function u(e) {
     return (0, s.isInterceptionRouteAppPath)(e) && (e = (0, s.extractInterceptionRouteInformation)(e).interceptedRoute), a.test(e);
   }
-})(w);
+})(y);
 (function(r) {
   Object.defineProperty(r, "__esModule", {
     value: !0
@@ -119,8 +119,8 @@ var w = {};
       return u.isDynamicRoute;
     }
   });
-  const a = y, u = w;
-})(d);
+  const a = w, u = y;
+})(f);
 var R = {};
 (function(r) {
   Object.defineProperty(r, "__esModule", {
@@ -144,7 +144,7 @@ var R = {};
       return u;
     }
   });
-  const s = d, a = R;
+  const s = f, a = R;
   function u(e) {
     let t = (0, a.normalizePathSep)(e);
     return t.startsWith("/index/") && !(0, s.isDynamicRoute)(t) ? t.slice(6) : t !== "/index" ? t : "/";
@@ -153,10 +153,10 @@ var R = {};
 async function P(r, s) {
   const a = s == null ? void 0 : s.router;
   if (!a)
-    return "/404";
+    throw new Error("router singleton is undefined");
   const e = await a.pageLoader.getPageList(), t = p(g.denormalizePagePath(r));
   return t === "/404" || t === "/_error" ? r : (e.includes(t) || e.some((o) => {
-    if (d.isDynamicRoute(o) && S(o).re.test(t))
+    if (f.isDynamicRoute(o) && S(o).re.test(t))
       return r = o, !0;
   }), p(r));
 }
