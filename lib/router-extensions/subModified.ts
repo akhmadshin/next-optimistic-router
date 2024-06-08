@@ -25,8 +25,10 @@ export const subModified = (info: PrivateRouteInfo, App: AppComponent, scroll: {
   if (isPageOptimisticallyLoaded) {
     window.__NEXT_OPTIMISTIC_LINK_RENDERED_PATHNAME = window.location.pathname;
   } else if (window.__NEXT_OPTIMISTIC_LINK_RENDERED_PATHNAME === window.location.pathname) {
-    window.__NEXT_OPTIMISTIC_LINK_RENDERED_PATHNAME = undefined;
     withRerender = false;
+  }
+  if (!isPageOptimisticallyLoaded) {
+    window.__NEXT_OPTIMISTIC_LINK_RENDERED_PATHNAME = undefined;
   }
 
   if (withRerender) {
