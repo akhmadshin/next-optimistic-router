@@ -30,61 +30,6 @@ export default function App({ Component, pageProps }: AppProps) {
   );
 }
 ```
-If you have middleware file with NextResponse.rewrite calls for some routes, you won't see changes in link behaviour when
-navigating to those routes. To fix it, you need to duplicate rewrite logic from middleware in pathModifier function.
-Let's consider you have middleware file like this
-
-```ts
-import { NextRequest, NextResponse } from 'next/server'
-
-const PUBLIC_FILE = /\.(.*)$/
-
-export async function middleware(req: NextRequest) {
-  if (
-    req.nextUrl.pathname.startsWith('/_next') ||
-    req.nextUrl.pathname.includes('/api/') ||
-    PUBLIC_FILE.test(req.nextUrl.pathname)
-  ) {
-    return
-  }
-
-  if (req.nextUrl.locale === 'default') {
-    const locale = 'en'
-
-    return NextResponse.redirect(
-      new URL(`/${locale}${req.nextUrl.pathname}${req.nextUrl.search}`, req.url)
-    )
-  }
-}
-```
-And your _app file will look like this
-```tsx
-import "@/styles/globals.css";
-import type { AppProps } from "next/app";
-import process from 'process';
-import singletonRouter from 'next/dist/client/router';
-import { useCallback } from 'react';
-import { OptimisticRouterProvider } from 'next-optimistic-router';
-
-export default function App({ Component, pageProps }: AppProps) {
-  const pathModifier = useCallback((pathname: string) => {
-    const defaultLocale = process.env.NEXT_PUBLIC_DEFAULT_LOCALE;
-    const localeCodes = process.env.NEXT_PUBLIC_LOCALES!.split(',');
-
-    if (localeCodes.every((code) => !pathname.startsWith(`/${code}`))) {
-      pathname = `/${defaultLocale}${pathname}`;
-    }
-
-    return pathname;
-  }, []);
-
-  return (
-    <OptimisticRouterProvider pathModifier={pathModifier} singletonRouter={singletonRouter}>
-      <Component {...pageProps} />
-    </OptimisticRouterProvider>
-  );
-}
-```
 
 ### 2) Wrap getServerSideProps/getStaticProps functions
 
@@ -104,9 +49,11 @@ const normalizeResolvedUrl = (resolvedUrl: string) => {
   const pathnameAndQuery = normalizedResolvedUrl.split('?') as [string, string];
   let pathname = pathnameAndQuery[0];
   const query = pathnameAndQuery[1];
-  if (process.env.__NEXT_TRAILING_SLASH) {
+
+  if (process.env.__NEXT_TRAILING_SLASH && pathname !== '/') {
     pathname = `${pathname}/`
   }
+
   if (query) {
     return `${pathname}?${query}`
   }
@@ -123,12 +70,8 @@ export const withSSRTanStackQuery = <T extends object, Q extends ParsedUrlQuery 
   await queryClient.prefetchQuery({
     queryKey: [queryKey],
     queryFn: async () => {
-      try {
-        result = await getServerSideProps(props) as { props: T | Promise<T> };
-        return result?.props;
-      } catch (e) {
-        console.log('e = ', e);
-      }
+      result = await getServerSideProps(props) as { props: T | Promise<T> };
+      return result?.props;
     }
   })
 
@@ -152,7 +95,7 @@ Wrap getServersideProps functions like this
 export const getServerSideProps = withSSRTanStackQuery<ArticleItemApi, { slug: string }>(async ({ params }) => {
   const { slug } = params ?? {};
   try {
-    const article = await fetchArticle(slug)
+    const article = await fetchArticle(slug);
     return {
       props: article,
     }
@@ -188,10 +131,10 @@ const normalizePathname = (resolvedUrl: string) => {
   return pathname;
 }
 
-export const withSSGTanStackQuery = <T extends object, Q extends ParsedUrlQuery = ParsedUrlQuery>(getPathname: (context: Q) => string, getStaticProps: GetStaticProps<T, Q>) => async (
+export const withSSGTanStackQuery = <T extends object, Q extends ParsedUrlQuery = ParsedUrlQuery>(getPath: (context: Q) => string, getStaticProps: GetStaticProps<T, Q>) => async (
   props: GetStaticPropsContext<Q>,
 ) => {
-  const queryKey = normalizePathname(getPathname(props.params!));
+  const queryKey = normalizePathname(getPath(props.params!));
   let result: GetServerSidePropsResult<T> | undefined = undefined;
   const queryClient = new QueryClient();
 
@@ -245,10 +188,9 @@ pages/
 
 ### 3) Create usePageData hook
 ```ts
-import { useQuery } from '@tanstack/react-query';
-import { usePageDataOptions } from 'next-optimistic-router';
+import { DehydratedState, useQuery } from '@tanstack/react-query';
+import { usePageDataOptions } from '@/components/next-optimistic-router';
 import { useRouter } from 'next/router';
-import { DehydratedState } from '@tanstack/query-core/build/legacy/hydration';
 
 export const usePageData = <T>() => {
   const router = useRouter();
