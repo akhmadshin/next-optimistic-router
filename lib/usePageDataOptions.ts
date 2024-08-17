@@ -5,7 +5,7 @@ import type { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './
 import { buildRoute } from './router-utils/build-route';
 import type { NextRouter } from 'next/router';
 
-export const usePageDataOptions = (router: NextRouter, withTrailingSlash: boolean) => {
+export const usePageDataOptions = (router: NextRouter) => {
   const { pathModifier, singletonRouter } = useContext(OptimisticRouterContext);
 
   const queryFn = useCallback(async (): Promise<object> => {
@@ -48,7 +48,7 @@ export const usePageDataOptions = (router: NextRouter, withTrailingSlash: boolea
 
     delete pageRouter.components[componentPath];
 
-    await router.push(url, asPath);
+    await router.push(url, asPath, { scroll: false });
 
     pageRouter.getRouteInfo = pageRouter.getRouteInfoOrig;
     pageRouter.onlyAHashChange = pageRouter.onlyAHashChangeOrig;
@@ -58,7 +58,6 @@ export const usePageDataOptions = (router: NextRouter, withTrailingSlash: boolea
     }
 
     if ('notFound' in pageProps) {
-      // await pageRouter.push(url, asPath);
       return Promise.reject();
     }
     return pageProps;
@@ -68,10 +67,6 @@ export const usePageDataOptions = (router: NextRouter, withTrailingSlash: boolea
     const query = router.asPath.split('#')[0].split('?')[1];
 
     let pathname = buildRoute(router.route, router.query as Record<string, string>);
-
-    if (withTrailingSlash && !pathname.endsWith('/')) {
-      pathname = `${pathname}/`
-    }
 
     if (query) {
       pathname = `${pathname}?${query}`

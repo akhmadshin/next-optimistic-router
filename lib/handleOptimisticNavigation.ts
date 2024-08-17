@@ -3,19 +3,22 @@ import type { ModifiedRouter } from './router-extensions/types.ts';
 import type { SingletonRouter } from 'next/router';
 import type { Url } from 'next/dist/shared/lib/router/router';
 import { formatWithValidation } from 'next/dist/shared/lib/router/utils/format-url';
+import { buildRoute } from './router-utils/build-route';
 
 export const handleOptimisticNavigation = (
   href: Url,
   singletonRouter: SingletonRouter,
   beforeOptimisticNavigation?: () => void
 ) => {
-  const urlAsString = typeof href === 'string' ? href : formatWithValidation(href)
+  const urlAsString = typeof href === 'string' ? href : formatWithValidation(href);
+  const pathname = buildRoute(singletonRouter.route, singletonRouter.query as Record<string, string>);
+
   const isLocal = isLocalURL(urlAsString);
   if (!isLocal) {
     return;
   }
 
-  if (urlAsString.startsWith('#')) {
+  if (urlAsString.startsWith('#') || urlAsString.startsWith(`${pathname}#`)) {
     return;
   }
 

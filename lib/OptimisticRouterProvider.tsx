@@ -8,7 +8,6 @@ import {
 } from './router-extensions/types';
 import { subModified } from './router-extensions/subModified';
 import { onlyAHashChangeNever } from './router-extensions/onlyAHashChangeNever';
-import { BeforePopStateCallback, beforePopStateModified } from './router-extensions/beforePopStateModified';
 import type { SingletonRouter } from 'next/router';
 import type { AppComponent, PrivateRouteInfo } from 'next/dist/shared/lib/router/router';
 
@@ -58,7 +57,6 @@ export const patchRouter = (pathnameModifier: (pathname: string) => string = (ro
   if (!pageRouter.onlyAHashChangeNever) {
     pageRouter.onlyAHashChangeNever = onlyAHashChangeNever.bind(pageRouter) as OnlyHashChange;
   }
-  pageRouter.beforePopState = ((cb: BeforePopStateCallback) => beforePopStateModified(cb, singletonRouter)).bind(pageRouter) as (cb: BeforePopStateCallback) => void;
 }
 
 export const OptimisticRouterProvider: FC<PropsWithChildren<Props>> = ({ pathModifier, singletonRouter, children }) => {

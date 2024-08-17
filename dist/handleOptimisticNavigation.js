@@ -1,16 +1,17 @@
+import { buildRoute as B } from "./router-utils/build-route.js";
 var U = {}, I = {};
 (function(e) {
   Object.defineProperty(e, "__esModule", {
     value: !0
   });
-  function o(t, c) {
+  function n(t, c) {
     for (var h in c)
       Object.defineProperty(t, h, {
         enumerable: !0,
         get: c[h]
       });
   }
-  o(e, {
+  n(e, {
     DecodeError: function() {
       return P;
     },
@@ -33,25 +34,25 @@ var U = {}, I = {};
       return v;
     },
     WEB_VITALS: function() {
-      return u;
+      return s;
     },
     execOnce: function() {
-      return n;
+      return o;
     },
     getDisplayName: function() {
       return r;
     },
     getLocationOrigin: function() {
-      return a;
-    },
-    getURL: function() {
-      return f;
-    },
-    isAbsoluteUrl: function() {
       return i;
     },
+    getURL: function() {
+      return l;
+    },
+    isAbsoluteUrl: function() {
+      return u;
+    },
     isResSent: function() {
-      return s;
+      return a;
     },
     loadGetInitialProps: function() {
       return p;
@@ -63,7 +64,7 @@ var U = {}, I = {};
       return A;
     }
   });
-  const u = [
+  const s = [
     "CLS",
     "FCP",
     "FID",
@@ -71,7 +72,7 @@ var U = {}, I = {};
     "LCP",
     "TTFB"
   ];
-  function n(t) {
+  function o(t) {
     let c = !1, h;
     return function() {
       for (var O = arguments.length, _ = new Array(O), E = 0; E < O; E++)
@@ -79,19 +80,19 @@ var U = {}, I = {};
       return c || (c = !0, h = t(..._)), h;
     };
   }
-  const l = /^[a-zA-Z][a-zA-Z\d+\-.]*?:/, i = (t) => l.test(t);
-  function a() {
+  const f = /^[a-zA-Z][a-zA-Z\d+\-.]*?:/, u = (t) => f.test(t);
+  function i() {
     const { protocol: t, hostname: c, port: h } = window.location;
     return t + "//" + c + (h ? ":" + h : "");
   }
-  function f() {
-    const { href: t } = window.location, c = a();
+  function l() {
+    const { href: t } = window.location, c = i();
     return t.substring(c.length);
   }
   function r(t) {
     return typeof t == "string" ? t : t.displayName || t.name || "Unknown";
   }
-  function s(t) {
+  function a(t) {
     return t.finished || t.headersSent;
   }
   function d(t) {
@@ -112,7 +113,7 @@ var U = {}, I = {};
         pageProps: await p(c.Component, c.ctx)
       } : {};
     const _ = await t.getInitialProps(c);
-    if (O && s(O))
+    if (O && a(O))
       return _;
     if (!_) {
       const E = '"' + r(t) + '.getInitialProps()" should resolve to an object. But found "' + _ + '" instead.';
@@ -151,158 +152,158 @@ var U = {}, I = {};
     });
   }
 })(I);
-var N = { exports: {} }, L = {}, R = {};
+var b = { exports: {} }, L = {}, q = {};
 (function(e) {
   Object.defineProperty(e, "__esModule", {
     value: !0
   }), Object.defineProperty(e, "parsePath", {
     enumerable: !0,
     get: function() {
-      return o;
+      return n;
     }
   });
-  function o(u) {
-    const n = u.indexOf("#"), l = u.indexOf("?"), i = l > -1 && (n < 0 || l < n);
-    return i || n > -1 ? {
-      pathname: u.substring(0, i ? l : n),
-      query: i ? u.substring(l, n > -1 ? n : void 0) : "",
-      hash: n > -1 ? u.slice(n) : ""
+  function n(s) {
+    const o = s.indexOf("#"), f = s.indexOf("?"), u = f > -1 && (o < 0 || f < o);
+    return u || o > -1 ? {
+      pathname: s.substring(0, u ? f : o),
+      query: u ? s.substring(f, o > -1 ? o : void 0) : "",
+      hash: o > -1 ? s.slice(o) : ""
     } : {
-      pathname: u,
+      pathname: s,
       query: "",
       hash: ""
     };
   }
-})(R);
+})(q);
 (function(e) {
   Object.defineProperty(e, "__esModule", {
     value: !0
   }), Object.defineProperty(e, "pathHasPrefix", {
     enumerable: !0,
     get: function() {
-      return u;
+      return s;
     }
   });
-  const o = R;
-  function u(n, l) {
-    if (typeof n != "string")
+  const n = q;
+  function s(o, f) {
+    if (typeof o != "string")
       return !1;
-    const { pathname: i } = (0, o.parsePath)(n);
-    return i === l || i.startsWith(l + "/");
+    const { pathname: u } = (0, n.parsePath)(o);
+    return u === f || u.startsWith(f + "/");
   }
 })(L);
-(function(e, o) {
-  Object.defineProperty(o, "__esModule", {
+(function(e, n) {
+  Object.defineProperty(n, "__esModule", {
     value: !0
-  }), Object.defineProperty(o, "hasBasePath", {
+  }), Object.defineProperty(n, "hasBasePath", {
     enumerable: !0,
     get: function() {
-      return l;
+      return f;
     }
   });
-  const u = L, n = process.env.__NEXT_ROUTER_BASEPATH || "";
-  function l(i) {
-    return (0, u.pathHasPrefix)(i, n);
+  const s = L, o = process.env.__NEXT_ROUTER_BASEPATH || "";
+  function f(u) {
+    return (0, s.pathHasPrefix)(u, o);
   }
-  (typeof o.default == "function" || typeof o.default == "object" && o.default !== null) && typeof o.default.__esModule > "u" && (Object.defineProperty(o.default, "__esModule", { value: !0 }), Object.assign(o.default, o), e.exports = o.default);
-})(N, N.exports);
-var B = N.exports;
+  (typeof n.default == "function" || typeof n.default == "object" && n.default !== null) && typeof n.default.__esModule > "u" && (Object.defineProperty(n.default, "__esModule", { value: !0 }), Object.assign(n.default, n), e.exports = n.default);
+})(b, b.exports);
+var W = b.exports;
 (function(e) {
   Object.defineProperty(e, "__esModule", {
     value: !0
   }), Object.defineProperty(e, "isLocalURL", {
     enumerable: !0,
     get: function() {
-      return n;
+      return o;
     }
   });
-  const o = I, u = B;
-  function n(l) {
-    if (!(0, o.isAbsoluteUrl)(l))
+  const n = I, s = W;
+  function o(f) {
+    if (!(0, n.isAbsoluteUrl)(f))
       return !0;
     try {
-      const i = (0, o.getLocationOrigin)(), a = new URL(l, i);
-      return a.origin === i && (0, u.hasBasePath)(a.pathname);
+      const u = (0, n.getLocationOrigin)(), i = new URL(f, u);
+      return i.origin === u && (0, s.hasBasePath)(i.pathname);
     } catch {
       return !1;
     }
   }
 })(U);
-var T = {}, b = {};
-function q(e) {
+var R = {}, N = {};
+function T(e) {
   if (typeof WeakMap != "function")
     return null;
-  var o = /* @__PURE__ */ new WeakMap(), u = /* @__PURE__ */ new WeakMap();
-  return (q = function(n) {
-    return n ? u : o;
+  var n = /* @__PURE__ */ new WeakMap(), s = /* @__PURE__ */ new WeakMap();
+  return (T = function(o) {
+    return o ? s : n;
   })(e);
 }
-b._ = b._interop_require_wildcard = W;
-function W(e, o) {
-  if (!o && e && e.__esModule)
+N._ = N._interop_require_wildcard = D;
+function D(e, n) {
+  if (!n && e && e.__esModule)
     return e;
   if (e === null || typeof e != "object" && typeof e != "function")
     return { default: e };
-  var u = q(o);
-  if (u && u.has(e))
-    return u.get(e);
-  var n = { __proto__: null }, l = Object.defineProperty && Object.getOwnPropertyDescriptor;
-  for (var i in e)
-    if (i !== "default" && Object.prototype.hasOwnProperty.call(e, i)) {
-      var a = l ? Object.getOwnPropertyDescriptor(e, i) : null;
-      a && (a.get || a.set) ? Object.defineProperty(n, i, a) : n[i] = e[i];
+  var s = T(n);
+  if (s && s.has(e))
+    return s.get(e);
+  var o = { __proto__: null }, f = Object.defineProperty && Object.getOwnPropertyDescriptor;
+  for (var u in e)
+    if (u !== "default" && Object.prototype.hasOwnProperty.call(e, u)) {
+      var i = f ? Object.getOwnPropertyDescriptor(e, u) : null;
+      i && (i.get || i.set) ? Object.defineProperty(o, u, i) : o[u] = e[u];
     }
-  return n.default = e, u && u.set(e, n), n;
+  return o.default = e, s && s.set(e, o), o;
 }
 var w = {}, S;
-function D() {
+function Q() {
   return S || (S = 1, function(e) {
     Object.defineProperty(e, "__esModule", {
       value: !0
     });
-    function o(a, f) {
-      for (var r in f)
-        Object.defineProperty(a, r, {
+    function n(i, l) {
+      for (var r in l)
+        Object.defineProperty(i, r, {
           enumerable: !0,
-          get: f[r]
+          get: l[r]
         });
     }
-    o(e, {
+    n(e, {
       assign: function() {
-        return i;
-      },
-      searchParamsToUrlQuery: function() {
         return u;
       },
+      searchParamsToUrlQuery: function() {
+        return s;
+      },
       urlQueryToSearchParams: function() {
-        return l;
+        return f;
       }
     });
-    function u(a) {
-      const f = {};
-      return a.forEach((r, s) => {
-        typeof f[s] > "u" ? f[s] = r : Array.isArray(f[s]) ? f[s].push(r) : f[s] = [
-          f[s],
+    function s(i) {
+      const l = {};
+      return i.forEach((r, a) => {
+        typeof l[a] > "u" ? l[a] = r : Array.isArray(l[a]) ? l[a].push(r) : l[a] = [
+          l[a],
           r
         ];
-      }), f;
+      }), l;
     }
-    function n(a) {
-      return typeof a == "string" || typeof a == "number" && !isNaN(a) || typeof a == "boolean" ? String(a) : "";
+    function o(i) {
+      return typeof i == "string" || typeof i == "number" && !isNaN(i) || typeof i == "boolean" ? String(i) : "";
     }
-    function l(a) {
-      const f = new URLSearchParams();
-      return Object.entries(a).forEach((r) => {
-        let [s, d] = r;
-        Array.isArray(d) ? d.forEach((p) => f.append(s, n(p))) : f.set(s, n(d));
-      }), f;
+    function f(i) {
+      const l = new URLSearchParams();
+      return Object.entries(i).forEach((r) => {
+        let [a, d] = r;
+        Array.isArray(d) ? d.forEach((p) => l.append(a, o(p))) : l.set(a, o(d));
+      }), l;
     }
-    function i(a) {
-      for (var f = arguments.length, r = new Array(f > 1 ? f - 1 : 0), s = 1; s < f; s++)
-        r[s - 1] = arguments[s];
+    function u(i) {
+      for (var l = arguments.length, r = new Array(l > 1 ? l - 1 : 0), a = 1; a < l; a++)
+        r[a - 1] = arguments[a];
       return r.forEach((d) => {
-        Array.from(d.keys()).forEach((p) => a.delete(p)), d.forEach((p, g) => a.append(g, p));
-      }), a;
+        Array.from(d.keys()).forEach((p) => i.delete(p)), d.forEach((p, g) => i.append(g, p));
+      }), i;
     }
   }(w)), w;
 }
@@ -310,32 +311,32 @@ function D() {
   Object.defineProperty(e, "__esModule", {
     value: !0
   });
-  function o(r, s) {
-    for (var d in s)
+  function n(r, a) {
+    for (var d in a)
       Object.defineProperty(r, d, {
         enumerable: !0,
-        get: s[d]
+        get: a[d]
       });
   }
-  o(e, {
+  n(e, {
     formatUrl: function() {
-      return i;
+      return u;
     },
     formatWithValidation: function() {
-      return f;
+      return l;
     },
     urlObjectKeys: function() {
-      return a;
+      return i;
     }
   });
-  const n = /* @__PURE__ */ b._(D()), l = /https?|ftp|gopher|file/;
-  function i(r) {
-    let { auth: s, hostname: d } = r, p = r.protocol || "", g = r.pathname || "", v = r.hash || "", P = r.query || "", y = !1;
-    s = s ? encodeURIComponent(s).replace(/%3A/i, ":") + "@" : "", r.host ? y = s + r.host : d && (y = s + (~d.indexOf(":") ? "[" + d + "]" : d), r.port && (y += ":" + r.port)), P && typeof P == "object" && (P = String(n.urlQueryToSearchParams(P)));
+  const o = /* @__PURE__ */ N._(Q()), f = /https?|ftp|gopher|file/;
+  function u(r) {
+    let { auth: a, hostname: d } = r, p = r.protocol || "", g = r.pathname || "", v = r.hash || "", P = r.query || "", y = !1;
+    a = a ? encodeURIComponent(a).replace(/%3A/i, ":") + "@" : "", r.host ? y = a + r.host : d && (y = a + (~d.indexOf(":") ? "[" + d + "]" : d), r.port && (y += ":" + r.port)), P && typeof P == "object" && (P = String(o.urlQueryToSearchParams(P)));
     let m = r.search || P && "?" + P || "";
-    return p && !p.endsWith(":") && (p += ":"), r.slashes || (!p || l.test(p)) && y !== !1 ? (y = "//" + (y || ""), g && g[0] !== "/" && (g = "/" + g)) : y || (y = ""), v && v[0] !== "#" && (v = "#" + v), m && m[0] !== "?" && (m = "?" + m), g = g.replace(/[?#]/g, encodeURIComponent), m = m.replace("#", "%23"), "" + p + y + g + m + v;
+    return p && !p.endsWith(":") && (p += ":"), r.slashes || (!p || f.test(p)) && y !== !1 ? (y = "//" + (y || ""), g && g[0] !== "/" && (g = "/" + g)) : y || (y = ""), v && v[0] !== "#" && (v = "#" + v), m && m[0] !== "?" && (m = "?" + m), g = g.replace(/[?#]/g, encodeURIComponent), m = m.replace("#", "%23"), "" + p + y + g + m + v;
   }
-  const a = [
+  const i = [
     "auth",
     "hash",
     "host",
@@ -349,20 +350,20 @@ function D() {
     "search",
     "slashes"
   ];
-  function f(r) {
-    return process.env.NODE_ENV === "development" && r !== null && typeof r == "object" && Object.keys(r).forEach((s) => {
-      a.includes(s) || console.warn("Unknown key passed via urlObject into url.format: " + s);
-    }), i(r);
+  function l(r) {
+    return process.env.NODE_ENV === "development" && r !== null && typeof r == "object" && Object.keys(r).forEach((a) => {
+      i.includes(a) || console.warn("Unknown key passed via urlObject into url.format: " + a);
+    }), u(r);
   }
-})(T);
-const Q = (e, o, u) => {
-  const n = typeof e == "string" ? e : T.formatWithValidation(e);
-  if (!U.isLocalURL(n) || n.startsWith("#"))
+})(R);
+const F = (e, n, s) => {
+  const o = typeof e == "string" ? e : R.formatWithValidation(e), f = B(n.route, n.query);
+  if (!U.isLocalURL(o) || o.startsWith("#") || o.startsWith(`${f}#`))
     return;
-  u && u();
-  const i = o == null ? void 0 : o.router;
+  s && s();
+  const i = n == null ? void 0 : n.router;
   !i || !i.getRouteInfoOnly || (i.getRouteInfo = i.getRouteInfoOnly);
 };
 export {
-  Q as handleOptimisticNavigation
+  F as handleOptimisticNavigation
 };
