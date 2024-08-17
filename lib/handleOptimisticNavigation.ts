@@ -5,13 +5,18 @@ import type { Url } from 'next/dist/shared/lib/router/router';
 import { formatWithValidation } from 'next/dist/shared/lib/router/utils/format-url';
 import { buildRoute } from './router-utils/build-route';
 
-export const handleOptimisticNavigation = (
+interface Props {
   href: Url,
   singletonRouter: SingletonRouter,
-  beforeOptimisticNavigation?: () => void
-) => {
+  withTrailingSlash: boolean,
+}
+export const handleOptimisticNavigation = ({
+  href,
+  singletonRouter,
+  withTrailingSlash,
+}: Props) => {
   const urlAsString = typeof href === 'string' ? href : formatWithValidation(href);
-  const pathname = buildRoute(singletonRouter.route, singletonRouter.query as Record<string, string>);
+  const pathname = buildRoute(singletonRouter.route, singletonRouter.query as Record<string, string>, withTrailingSlash);
 
   const isLocal = isLocalURL(urlAsString);
   if (!isLocal) {
@@ -20,10 +25,6 @@ export const handleOptimisticNavigation = (
 
   if (urlAsString.startsWith('#') || urlAsString.startsWith(`${pathname}#`)) {
     return;
-  }
-
-  if (beforeOptimisticNavigation) {
-    beforeOptimisticNavigation();
   }
 
   const pageRouter = singletonRouter?.router as ModifiedRouter | null;

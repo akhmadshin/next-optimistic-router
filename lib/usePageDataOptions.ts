@@ -5,7 +5,7 @@ import type { GetRouteInfoProps, GetRouteInfoResponse, ModifiedRouter } from './
 import { buildRoute } from './router-utils/build-route';
 import type { NextRouter } from 'next/router';
 
-export const usePageDataOptions = (router: NextRouter) => {
+export const usePageDataOptions = (router: NextRouter, withTrailingSlash: boolean) => {
   const { pathModifier, singletonRouter } = useContext(OptimisticRouterContext);
 
   const queryFn = useCallback(async (): Promise<object> => {
@@ -66,7 +66,7 @@ export const usePageDataOptions = (router: NextRouter) => {
   const getResolvedUrl = () => {
     const query = router.asPath.split('#')[0].split('?')[1];
 
-    let pathname = buildRoute(router.route, router.query as Record<string, string>);
+    let pathname = buildRoute(router.route, router.query as Record<string, string>, withTrailingSlash);
 
     if (query) {
       pathname = `${pathname}?${query}`

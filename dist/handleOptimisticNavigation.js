@@ -356,11 +356,14 @@ function Q() {
     }), u(r);
   }
 })(R);
-const F = (e, n, s) => {
-  const o = typeof e == "string" ? e : R.formatWithValidation(e), f = B(n.route, n.query);
+const F = ({
+  href: e,
+  singletonRouter: n,
+  withTrailingSlash: s
+}) => {
+  const o = typeof e == "string" ? e : R.formatWithValidation(e), f = B(n.route, n.query, s);
   if (!U.isLocalURL(o) || o.startsWith("#") || o.startsWith(`${f}#`))
     return;
-  s && s();
   const i = n == null ? void 0 : n.router;
   !i || !i.getRouteInfoOnly || (i.getRouteInfo = i.getRouteInfoOnly);
 };

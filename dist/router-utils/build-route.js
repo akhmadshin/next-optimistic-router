@@ -1,7 +1,7 @@
-const u = (n, e) => {
-  const r = Object.keys(e).reduce((c, t) => c.replace(`[${t}]`, e[t]), n);
-  return process.env.__NEXT_TRAILING_SLASH ? `${r}/` : r;
+const o = (n, e, u) => {
+  const t = Object.keys(e).reduce((c, r) => c.replace(`[${r}]`, e[r]), n);
+  return u ? `${t}/` : t;
 };
 export {
-  u as buildRoute
+  o as buildRoute
 };

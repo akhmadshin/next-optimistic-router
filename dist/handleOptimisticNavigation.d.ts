@@ -1,4 +1,10 @@
 import { SingletonRouter } from 'next/router';
 import { Url } from 'next/dist/shared/lib/router/router';
 
-export declare const handleOptimisticNavigation: (href: Url, singletonRouter: SingletonRouter, beforeOptimisticNavigation?: () => void) => void;
+interface Props {
+    href: Url;
+    singletonRouter: SingletonRouter;
+    withTrailingSlash: boolean;
+}
+export declare const handleOptimisticNavigation: ({ href, singletonRouter, withTrailingSlash, }: Props) => void;
+export {};
