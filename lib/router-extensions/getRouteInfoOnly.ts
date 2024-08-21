@@ -95,6 +95,9 @@ export const getRouteInfoOnly = async ({ singletonRouter, ...props}: GetRouteInf
     routeInfo.resolvedAs = resolvedAs
     pageRouter.components[route] = routeInfo
 
+    setTimeout(() => {
+      delete pageRouter.components[route];
+    }, 0);
     return routeInfo
   } catch (err) {
     pageRouter.getRouteInfo = pageRouter.getRouteInfoOrig;

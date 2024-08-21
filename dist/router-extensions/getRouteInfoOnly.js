@@ -3,16 +3,16 @@ const C = async ({ singletonRouter: o, ...r }) => {
   const {
     pathname: i,
     query: l,
-    as: u,
+    as: h,
     resolvedAs: f,
-    locale: g,
+    locale: d,
     pathnameModifier: c
-  } = r, p = f.split("#")[0].split("?")[0], h = c ? c(p) : p, a = await y(h, o), e = o == null ? void 0 : o.router;
+  } = r, p = f.split("#")[0].split("?")[0], u = c ? c(p) : p, n = await y(u, o), e = o == null ? void 0 : o.router;
   if (!e)
     throw new Error("router singleton is undefined");
   e.getRouteInfo = e.getRouteInfoOrig, e.onlyAHashChange = e.onlyAHashChangeOrig;
   try {
-    const t = await e.fetchComponent(a).then(
+    const t = await e.fetchComponent(n).then(
       (s) => ({
         Component: s.page,
         styleSheets: s.styleSheets,
@@ -21,25 +21,27 @@ const C = async ({ singletonRouter: o, ...r }) => {
       })
     );
     if (process.env.NODE_ENV !== "production") {
-      const d = (await import("../index-Dth3kwzf.js").then((m) => m.i)).isValidElementType;
-      if (!d(t.Component))
+      const g = (await import("../index-Dth3kwzf.js").then((m) => m.i)).isValidElementType;
+      if (!g(t.Component))
         throw new Error(
           `The default export is not a React Component in page: "${i}"`
         );
     }
-    const n = await e.getInitialProps(
+    const a = await e.getInitialProps(
       t.Component,
       // we provide AppTree later so PageRouter.router! needs to be `any`
       {
         pathname: i,
         query: l,
-        asPath: u,
-        locale: g,
+        asPath: h,
+        locale: d,
         locales: e.locales,
         defaultLocale: e.defaultLocale
       }
     );
-    return n.pageProps = Object.assign({}, n.pageProps), t.props = n, t.route = a, t.query = l, t.resolvedAs = h, e.components[a] = t, t;
+    return a.pageProps = Object.assign({}, a.pageProps), t.props = a, t.route = n, t.query = l, t.resolvedAs = u, e.components[n] = t, setTimeout(() => {
+      delete e.components[n];
+    }, 0), t;
   } catch {
     return e.getRouteInfo = e.getRouteInfoOrig, e.onlyAHashChange = e.onlyAHashChangeOrig, e.getRouteInfoOrig(r);
   }

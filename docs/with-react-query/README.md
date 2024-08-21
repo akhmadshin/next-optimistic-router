@@ -20,24 +20,61 @@ $ yarn add next-optimistic-router
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import singletonRouter from 'next/dist/client/router';
-import { OptimisticRouterProvider } from 'next-optimistic-router';
+import { handleOptimisticNavigation, OptimisticRouterProvider } from 'next-optimistic-router';
+import { DehydratedState, HydrationBoundary, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import React, { useLayoutEffect } from 'react';
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps<{ dehydratedState: DehydratedState}>) {
+  const router = useRouter();
+
+  const [queryClient] = React.useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 1 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
+      }
+    }
+  }))
+
+  useLayoutEffect(() => {
+    // disable router prefetch completely
+    router.prefetch = async () => Promise.resolve(undefined);
+
+    router.beforePopState((state) => {
+      handleOptimisticNavigation({
+        href: state.as,
+        singletonRouter,
+        withTrailingSlash: Boolean(process.env.__NEXT_TRAILING_SLASH),
+      });
+      return true;
+    });
+  }, [router])
+
   return (
     <OptimisticRouterProvider singletonRouter={singletonRouter}>
-      <Component {...pageProps} />
+      <QueryClientProvider client={queryClient}>
+        <HydrationBoundary state={pageProps.dehydratedState} options={{
+          defaultOptions: {},
+        }}>
+          <Component {...pageProps} />
+        </HydrationBoundary>
+      </QueryClientProvider>
     </OptimisticRouterProvider>
   );
-}
+};
 ```
 
 ### 2) Wrap getServerSideProps/getStaticProps functions
 
-#### Handling getServerSideProps
+<details>
+<summary>Wrapper for getServerSideProps</summary>
+
 Create a file withSSRTanStackQuery.ts
+
 ```ts
-import { ParsedUrlQuery } from 'querystring';
-import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import type { ParsedUrlQuery } from 'querystring';
+import type { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 
 function removeTrailingSlash(route: string) {
@@ -45,17 +82,24 @@ function removeTrailingSlash(route: string) {
 }
 
 const normalizeResolvedUrl = (resolvedUrl: string) => {
-  const normalizedResolvedUrl = removeTrailingSlash(resolvedUrl);
-  const pathnameAndQuery = normalizedResolvedUrl.split('?') as [string, string];
-  let pathname = pathnameAndQuery[0];
-  const query = pathnameAndQuery[1];
+  const pathnameAndQuery = resolvedUrl.split('?') as [string, string];
+  let pathname = removeTrailingSlash(pathnameAndQuery[0]);
+  let query = pathnameAndQuery[1];
+
 
   if (process.env.__NEXT_TRAILING_SLASH && pathname !== '/') {
     pathname = `${pathname}/`
   }
-
   if (query) {
-    return `${pathname}?${query}`
+    const params = new URLSearchParams(query);
+    params.forEach((value, key) => {
+      if (key.startsWith('nxtP')) {
+        params.delete(key);
+      }
+    });
+    query = params.toString();
+    if (query)
+      return `${pathname}?${query}`
   }
   return pathname;
 }
@@ -90,6 +134,7 @@ export const withSSRTanStackQuery = <T extends object, Q extends ParsedUrlQuery 
   }
 }
 ```
+
 Wrap getServersideProps functions like this
 ```ts
 export const getServerSideProps = withSSRTanStackQuery<ArticleItemApi, { slug: string }>(async ({ params }) => {
@@ -106,9 +151,14 @@ export const getServerSideProps = withSSRTanStackQuery<ArticleItemApi, { slug: s
   }
 })
 ```
+</details>
 
-#### Handling getStaticProps
-Create file withSSGTanStackQuery.ts
+
+<details>
+<summary>Wrapper for getStaticProps</summary>
+
+Create a file withSSGTanStackQuery.ts
+
 ```ts
 import { ParsedUrlQuery } from 'querystring';
 import {
@@ -186,25 +236,35 @@ pages/
         └── index.tsx
 ```
 
+</details>
+
 ### 3) Create usePageData hook
 ```ts
-import { DehydratedState, useQuery } from '@tanstack/react-query';
-import { usePageDataOptions } from '@/components/next-optimistic-router';
+import { DehydratedState, useQuery, useQueryClient } from '@tanstack/react-query';
+import { usePageDataOptions } from 'next-optimistic-router';
 import { useRouter } from 'next/router';
 
 export const usePageData = <T>() => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const { queryKey, queryFn } = usePageDataOptions(router, Boolean(process.env.__NEXT_TRAILING_SLASH));
   const placeholderData = typeof window === 'undefined' ? undefined : window.placeholderData;
 
-  return useQuery<unknown, unknown, T>({
+  const res =  useQuery<unknown, unknown, T>({
     queryKey,
-    queryFn: () => queryFn().then((props: { dehydratedState: DehydratedState}) => {
-      return props?.dehydratedState ? props.dehydratedState.queries[0].state.data : props;
-    }),
+    queryFn: async () => {
+      const serverData = queryClient.getQueryData([...queryKey]);
+      if (serverData && !res.isStale) {
+        return serverData;
+      }
+      return queryFn().then((props) => {
+        const res = props as { dehydratedState: DehydratedState};
+        return res?.dehydratedState ? res.dehydratedState.queries[0].state.data : props;
+      })
+    },
     placeholderData,
-    staleTime: 5 * 60 * 1000,
   });
+  return res;
 }
 ```
 And use it to get data from getServerSideProps/getStaticProps functions
@@ -216,40 +276,48 @@ const { data: article, isLoading, isFetching, isStale} = usePageData<BlogItemPag
 ### 4) Create OptimisticLink component
 
 ```tsx
-import type { LinkProps } from 'next/link';
-import NextLink from 'next/link';
-import singletonRouter from 'next/router';
+import NextLink, { LinkProps } from 'next/link';
+import React, { AnchorHTMLAttributes, MouseEvent, PropsWithChildren } from 'react';
 import { handleOptimisticNavigation } from 'next-optimistic-router';
-import type { AnchorHTMLAttributes, MouseEvent, PropsWithChildren } from 'react';
-import React from 'react';
-import console = require('console');
+import singletonRouter from 'next/router';
 
 type NextLinkProps = PropsWithChildren<Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> &
   LinkProps>
 
-export const Link: React.FC<PropsWithChildren<NextLinkProps>> = (props) => {
+type Props = NextLinkProps & {
+  placeholderData?: object;
+}
+
+export const Link = React.forwardRef<HTMLAnchorElement, Props>(function LinkComponent(props, ref) {
   const {
+    placeholderData,
     onClick,
+    href,
     children,
     ...restProps
   } = props;
-
   const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
     if (onClick) {
       onClick(e);
     }
-    handleOptimisticNavigation(props.href, singletonRouter);
+    handleOptimisticNavigation({
+      href,
+      singletonRouter,
+      withTrailingSlash: Boolean(process.env.__NEXT_TRAILING_SLASH),
+    });
+    window.placeholderData = placeholderData;
   }
 
   return (
     <NextLink
       onClick={handleClick}
+      href={href}
+      prefetch={false}
+      ref={ref}
       {...restProps}
-    >
-      {children}
-    </NextLink>
+    >{children}</NextLink>
   )
-}
+});
 ```
 
 Use OptimisticLink component like regular next/link component
